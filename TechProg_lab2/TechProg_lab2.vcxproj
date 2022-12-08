@@ -140,11 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aeroflot.c++" />
+    <ClCompile Include="file_utils.c++" />
     <ClCompile Include="getdata.c++" />
     <ClCompile Include="keeper.c++" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aeroflot.h" />
+    <ClInclude Include="file_utils.h" />
     <ClInclude Include="getdata.h" />
     <ClInclude Include="keeper.h" />
   </ItemGroup>

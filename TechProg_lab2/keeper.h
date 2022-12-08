@@ -1,33 +1,31 @@
 #ifndef __KEEPER_H__
 #define __KEEPER_H__
 
-#include "student.h"
+#include "aeroflot.h"
 
-class Keeper
-        {
+class Keeper {
 private:
-    Student** students;
-    unsigned int count_of_students;
+    Aeroflot** flights;
+    unsigned int count;
 
 public:
     Keeper();
     ~Keeper();
 
-    void show_b_students();
-    void show_all_students();
+    void show_same_type_flights(const char* type);
+    void show_flights();
 
-    void add_student();
-    void del_student();
+    void add_flight();
+    void del_flight();
 
 private:
-    Student* create_new_student();
-    void append_student_to_students(Student* new_student);
+    Aeroflot* create_new_flight();
+    void append_flight_to_flights(Aeroflot* new_flight);
+    void initialization(Aeroflot* flight);
+    void sort_and_append(Aeroflot* flight);
 
-    void init(Student* student);
-    void sort_and_add(Student* student);
-
-    int select_student();
-    void delete_student_from_list(int student_number);
+    int choose_flight();
+    void delete_flight_from_array(int flight);
 };
 
 

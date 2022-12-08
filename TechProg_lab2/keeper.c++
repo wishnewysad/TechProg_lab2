@@ -1,137 +1,134 @@
 #include "keeper.h"
 
 #include <iostream>
-#include "correct.h"
+#include "getdata.h"
 #include <cstring>
 
 Keeper::Keeper()
 {
-    count_of_students = 0;
-    students = nullptr;
+    count = 0;
+    flights = nullptr;
 }
 
 Keeper::~Keeper()
 {
-    for (int i = 0; i < count_of_students; ++i) {
-        delete students[i];
+    for (int i = 0; i < count; ++i) {
+        delete flights[i];
     }
 
-    delete[] students;
+    delete[] flights;
 }
 
-void Keeper::show_b_students()
+void Keeper::show_same_type_flights(const char* type)
 {
-    if (count_of_students == 0)
-        throw "There are no student";
+    if (count == 0)
+        throw "There are no flights";
 
     bool isSame = false;
-    for (int i = 0, j = 0; i < count_of_students; ++i) {
-        if (students[i]->is_b_student()){
+    for (int i = 0, j = 0; i < count; ++i) {
+        if (!strcmp(flights[i]->get_type(), type)){
             std::cout << j++ + 1 << "." << std::endl;
-            students[i]->show();
+            flights[i]->show();
             isSame = true;
         }
     }
     if (!isSame)
-        std::cout << "There are no same destination" << std::endl;
+        std::cout << "There are no same type" << std::endl;
 
 }
 
-void Keeper::show_all_students()
+void Keeper::show_flights()
 {
-    if (count_of_students == 0)
-        throw "There are no students";
+    if (count == 0)
+        throw "There are no flights";
 
-    for (int i = 0; i < count_of_students; ++i) {
+    for (int i = 0; i < count; ++i) {
         std::cout << i + 1 << ":" << std::endl;
-        students[i]->show();
+        flights[i]->show();
     }
 }
 
-void Keeper::add_student()
+void Keeper::add_flight()
 {
-    Student* new_student = create_new_student();
+    Aeroflot* new_flight = create_new_flight();
 
-    append_student_to_students(new_student);
+    append_flight_to_flights(new_flight);
 }
 
 
-void Keeper::del_student()
+void Keeper::del_flight()
 {
-    if (count_of_students == 0)
-        throw "There are no student";
+    if (count == 0)
+        throw "There are no flights";
 
-    int selection = select_student();
+    int choice = choose_flight();
 
-    delete_student_from_list(selection);
+    delete_flight_from_array(choice);
 }
 
-void Keeper::delete_student_from_list(int student_number)
+void Keeper::delete_flight_from_array(int flight)
 {
-    auto** new_students = new Student*[count_of_students - 1];
-    for (int i = 0, j = 0; i < count_of_students; ++i) {
-        if(i == (student_number-1))
+    auto** new_flights = new Aeroflot * [count - 1];
+    for (int i = 0, j = 0; i < count; ++i) {
+        if(i == (flight-1))
             continue;
-
-        new_students[j++] = students[i];
+        new_flights[j++] = flights[i];
     }
-    --count_of_students;
-
-    delete[] students;
-    students = new_students;
+    --count;
+    delete[] flights;
+    flights = new_flights;
 }
 
-int Keeper::select_student()
+int Keeper::choose_flight()
 {
-    int selection;
-    show_all_students();
-    std::cout << "Select student" << std::endl;
-    selection = get_data();
-    if(selection <= 0 || selection > count_of_students)
-        throw "There is no such student";
+    int choice;
+    show_flights();
+    std::cout << "Choose flight" << std::endl;
+    choice = get_int();
+    if(choice <= 0 || choice > count)
+        throw "There is no such flight";
 
-    return selection;
+    return choice;
 }
 
-Student* Keeper::create_new_student()
+Aeroflot* Keeper::create_new_flight()
 {
-    auto* student = new Student();
+    auto* flight = new Aeroflot();
 
-    return student;
+    return flight;
 }
 
-void Keeper::append_student_to_students(Student* new_student)
+void Keeper::append_flight_to_flights(Aeroflot *new_flight)
 {
-    if (count_of_students == 0)
-        init(new_student);
+    if (count == 0)
+        initialization(new_flight);
     else
-        sort_and_add(new_student);
+        sort_and_append(new_flight);
 }
 
-void Keeper::sort_and_add(Student* student)
+void Keeper::sort_and_append(Aeroflot *flight)
 {
-    auto** new_flights = new Student * [count_of_students + 1];
+    Aeroflot** new_flights = new Aeroflot * [count + 1];
     bool isInsert = false;
-    for (int i = 0, j = 0; i < count_of_students;) {
-        if (students[i]->get_average_score() > student->get_average_score()
-        && !isInsert){
-            new_flights[j++] = student;
+    for (int i = 0, j = 0; i < count;) {
+        if (strcmp(flights[i]->get_dest(), flight->get_dest()) >= 0 && !isInsert){
+            new_flights[j++] = flight;
             isInsert = true;
         }
-        new_flights[j++] = students[i++];
+        new_flights[j++] = flights[i++];
     }
 
-    ++count_of_students;
+    ++count;
     if(!isInsert)
-        new_flights[count_of_students - 1] = student;
+        new_flights[count - 1] = flight;
 
-    delete[] students;
-    students = new_flights;
+    delete[] flights;
+    flights = new_flights;
 }
 
-void Keeper::init(Student* student)
+void Keeper::initialization(Aeroflot* flight)
 {
-    students = new Student*[1];
-    students[0] = student;
-    ++count_of_students;
+    flights = new Aeroflot*[1];
+    flights[0] = flight;
+    ++count;
 }
